@@ -1,0 +1,25 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "TerraformGeneric",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:*",
+        "eks:*",
+        "iam:*",
+        "s3:*",
+        "rds:*",
+        "acm:*",
+        "route53:*",
+        "elasticloadbalancing:*",
+        "cloudwatch:*",
+        "logs:*",
+        "secretsmanager:*",
+        "dynamodb:*",
+        "sts:AssumeRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

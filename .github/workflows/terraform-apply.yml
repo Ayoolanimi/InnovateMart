@@ -1,0 +1,43 @@
+name: Terraform Apply (main)
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsTerraformRole
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform -chdir=infra/terraform init -input=false
+
+      - name: Terraform Apply
+        run: terraform -chdir=infra/terraform apply -auto-approve -input=false
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name $(terraform -chdir=infra/terraform output -raw cluster_name)
+
+      - name: Deploy Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/rbac/
+          kubectl apply -f k8s/base/
+          kubectl apply -f k8s/infra/
+          kubectl apply -f k8s/services/

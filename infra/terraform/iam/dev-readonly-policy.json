@@ -1,0 +1,32 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "EKSDescribe",
+      "Effect": "Allow",
+      "Action": [
+        "eks:DescribeCluster",
+        "eks:ListClusters",
+        "eks:ListNodegroups",
+        "eks:DescribeNodegroup"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadOnlyGeneral",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:Describe*",
+        "iam:GetRole",
+        "iam:ListRoles",
+        "cloudwatch:Get*",
+        "cloudwatch:Describe*",
+        "cloudwatch:List*",
+        "logs:GetLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
